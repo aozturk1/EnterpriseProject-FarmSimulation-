@@ -1,4 +1,3 @@
-import java.util.concurrent.TimeUnit;
 import java.util.*;
 import java.lang.*;
 
@@ -6,89 +5,72 @@ public class Main {
 
     public static void main(String[] args) {
 
-        slowPrint("Starting a new game of Farming Simulator 2024!\n");
+        Output.slowPrint("Starting a new game of Farm Management Simulator!");
 
-
-//        while(true){
-//            slowPrint("Farming Simulator 2024!");
-//        }
-
-
-        ///////TESTING/////
         CurrencyManager.getInstance();
+
         // create a new AnimalFarm
         Farm animalFarm = FarmFactory.createFarm("animal");
 
-        // create some farmers and add them to the animalFarm
-        Farmer farmer1 = new Farmer();
-        //Farmer farmer2 = new Farmer();
-            //animalFarm.getFarmers().add(farmer1);
-        //animalFarm.getFarmers().add(farmer2);
+        // add supplier to contacts
+        // add news to contacts
+        News news = new News("Local Whether 33");
+        Supplier supplier = new Supplier("Sarah");
+        animalFarm.addObservers(news);
+        animalFarm.addObservers(supplier);
 
-        // create a supplier and add them to the animalFarm
-            //Supplier supplier = new Supplier();
-            //animalFarm.getAnimals().addObserver(supplier);
+        // simulate the farm for infinite cycles
+        int i = 0;
+        while ( true ) {
+            //DAY CYCLE STARTS
 
-        // simulate the farm for 10 cycles
-        for (int i = 0; i < 10; i++) {
-            slowPrint("Cycle " + (i+1) + " begins.");
+            Output.slowPrint("Day " + (i+1) + " begins.");
 
+            Output.slowPrint("Reading the newspaper...");
+            RandomEventType type = getRandomEventType();
             // run a cycle on the animalFarm
-            slowPrint("Feeding and herding animals...\n");
-            slowPrint("Operating farm equipment...\n");
-            slowPrint("Collecting animal products...\n");
+            Output.slowPrint("Feeding and herding animals...");
+            Output.slowPrint("Operating farm equipment...");
+            Output.slowPrint("Collecting animal products...");
             animalFarm.runCycle();
-
-            // notify the farmers of any animal deaths
-//            for (Farmer farmer : animalFarm.getFarmers()) {
-//                for (Animal animal : animalFarm.getAnimals().getDeadAnimals()) {
-//                    farmer.update(animal);
-//                }
-//            }
-
-            // notify the supplier of any new animal stock needed
-//            animalFarm.getAnimals().notifyObservers();
 
             // add passive currency to the animalFarm
             int passiveCurrency = animalFarm.getPassiveCurrency();
-            slowPrint("Today the farm earned " + passiveCurrency + " Farm Coins!\n");
+            Output.slowPrint("Today the farm earned " + passiveCurrency + " Farm Coins!");
             CurrencyManager.getInstance().addCurrency(passiveCurrency);
 
             // print out the current currency
-            slowPrint("Current currency: " + CurrencyManager.getInstance().getCurrency() + "\n");
+            Output.slowPrint("Current currency: " + CurrencyManager.getInstance().getCurrency());
 
             // upgrade the animalFarm if possible
             animalFarm.upgrade();
 
-            slowPrint("Cycle " + (i+1) + " ends.\n");
-            slowPrint(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n");
+            //DAY CYCLE ENDS -> NIGHT CYCLE STARTS
+            Output.slowPrint("The sun sets...");
+
+
+            //NIGHT CYCLE ENDS
+
+            Output.slowPrint("Day " + (i+1) + " ends.");
+            Output.slowPrint(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+            i++;
         }
 
 
-    }
-
-    public static void slowPrint(String output) {
-        for (int i = 0; i < output.length(); i++) {
-            char c = output.charAt(i);
-            System.out.print(c);
-            try {
-                TimeUnit.MILLISECONDS.sleep(100);
-            }
-            catch (Exception e) {
-            }
-        }
     }
 
     public enum RandomEventType {
         DISEASE_OUTBREAK,
         WEATHER_STORM,
-        MARKET_CRASH
+        MARKET_CRASH,
+        EQUIPMENT_EXPENSES,
+        ALIEN_ABDUCTION
     }
 
-    public RandomEventType getRandomEventType() {
+    public static RandomEventType getRandomEventType() {
         Random random = new Random();
         int eventIndex = random.nextInt(RandomEventType.values().length);
-        System.out.println("There is a chance of" + RandomEventType.values()[eventIndex]);
+        Output.slowPrint("There is a chance of " + RandomEventType.values()[eventIndex]);
         return RandomEventType.values()[eventIndex];
     }
 

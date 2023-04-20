@@ -1,46 +1,46 @@
-import java.util.Collection;
+import java.util.ArrayList;
+import java.util.List;
 
 abstract public class Farm {
-    private int funds;
-    private int currency;
-    private int farmers;
-    private int animals;
-    private int crops;
-
     // constructor, getters and setters for currency, farmers, animals and crops
 
     public abstract void upgrade();
     public abstract int getPassiveCurrency();
+    public abstract boolean getCapacity();
 
     public abstract void runCycle();
-    public abstract Observable getAnimals();
-    public abstract Collection<Farmer> getFarmers();
+    public abstract void addObservers(Observer observer);
+    public abstract void tellObservers();
 }
 
 class AnimalFarm extends Farm {
-    private int funds;
-    private int animals;
+    private List<Observer> contacts = new ArrayList<Observer>();
+    public int animals;
+    public int cpacity;
     private int passiveCurrency;
     private int upgradeCost;
     private int farmLevel;
 
     public AnimalFarm() {
-        this.funds = 10;
         this.animals = 2;
+        this.cpacity = 5;
         this.passiveCurrency = 1;
-        this.upgradeCost = 50;
+        this.upgradeCost = 10;
         this.farmLevel = 1;
     }
 
     @Override
     public void upgrade() {
-        if (this.funds >= this.upgradeCost) {
-            this.funds -= this.upgradeCost;
+        if (CurrencyManager.getInstance().getCurrency() >= (2*(this.upgradeCost))) {
+            CurrencyManager.getInstance().spendCurrency(this.upgradeCost);
             this.upgradeCost *= 2;
             this.farmLevel++;
-            System.out.println("FARM LEVEL UP >>> This farm is now level: " + farmLevel);
+            Output.slowPrint("FARM LEVEL UP >>> This farm is now level: " + this.farmLevel);
         } else {
-            System.out.println("The farm is " + (this.upgradeCost - this.funds) + " Farm Coins away from leveling up.");
+            Output.slowPrint("The farm is " + (2*(this.upgradeCost) - CurrencyManager.getInstance().getCurrency()) + " Farm Coins away from leveling up.");
+            if (this.animals < 10) {
+                tellObservers();
+            }
         }
     }
 
@@ -50,33 +50,65 @@ class AnimalFarm extends Farm {
     }
 
     @Override
+    public boolean getCapacity() {
+        if(this.animals >= this.cpacity){
+            Output.slowPrint("Farm reached animal its maximum animal capacity!");
+            return true;
+        } return false;
+    }
+
+    @Override
     public void runCycle() {
-        this.animals += 1;
+        this.animals++;
     }
 
     @Override
-    public Observable getAnimals() {
-        System.out.println("10 animals died to a disease");
-        return null;
+    public void addObservers(Observer observer) {
+        contacts.add(observer);
     }
 
     @Override
-    public Collection<Farmer> getFarmers() {
-        System.out.println("Farmer Joe");
-        return null;
+    public void tellObservers() {
+        for (Observer o: contacts) {
+            o.observableNotify();
+        }
     }
-    // implementation of AnimalFarm
 }
 
 class CropFarm extends Farm {
+    private int crops;
+    private int passiveCurrency;
+    private int upgradeCost;
+    private int farmLevel;
+
+    public CropFarm() {
+        //this.funds = 10;
+        this.crops = 1;
+        this.passiveCurrency = 2;
+        this.upgradeCost = 5;
+        this.farmLevel = 1;
+    }
+
     @Override
     public void upgrade() {
-
+        if (CurrencyManager.getInstance().getCurrency() >= (2*(this.upgradeCost))) {
+            CurrencyManager.getInstance().spendCurrency(this.upgradeCost);
+            this.upgradeCost *= 2;
+            this.farmLevel++;
+            Output.slowPrint("FARM LEVEL UP >>> This farm is now level: " + this.farmLevel);
+        } else {
+            Output.slowPrint("The farm is " + (2*(this.upgradeCost) - CurrencyManager.getInstance().getCurrency()) + " Farm Coins away from leveling up.");
+        }
     }
 
     @Override
     public int getPassiveCurrency() {
-        return 0;
+        return this.crops * this.passiveCurrency;
+    }
+
+    @Override
+    public boolean getCapacity() {
+        return false;
     }
 
     @Override
@@ -85,47 +117,15 @@ class CropFarm extends Farm {
     }
 
     @Override
-    public Observable getAnimals() {
-        System.out.println("10 crops got eaten");
-        return null;
+    public void addObservers(Observer observer) {
+
     }
 
     @Override
-    public Collection<Farmer> getFarmers() {
-        System.out.println("Farmer Bob");
-        return null;
+    public void tellObservers() {
+
     }
     // implementation of CropFarm
-}
-
-class HybridFarm extends Farm {
-    @Override
-    public void upgrade() {
-
-    }
-
-    @Override
-    public int getPassiveCurrency() {
-        return 0;
-    }
-
-    @Override
-    public void runCycle() {
-
-    }
-
-    @Override
-    public Observable getAnimals() {
-        System.out.println("5 animals and 5 crops died");
-        return null;
-    }
-
-    @Override
-    public Collection<Farmer> getFarmers() {
-        System.out.println("Farmer Jhon");
-        return null;
-    }
-    // implementation of HybridFarm
 }
 
 class FarmFactory {
@@ -134,8 +134,6 @@ class FarmFactory {
             return new AnimalFarm();
         } else if (farmType.equals("crop")) {
             return new CropFarm();
-        } else if (farmType.equals("hybrid")) {
-            return new HybridFarm();
         }
         return null;
     }
