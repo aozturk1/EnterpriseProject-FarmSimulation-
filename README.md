@@ -4,7 +4,7 @@ GitHub Repo Link:
 https://github.com/aozturk1/SER316Assignment5Farm
 
 Screencast Link:
-...
+https://youtu.be/xODG3OxB_cQ
 
 ## Description
 A simple farming simulation with multiple design patterns implemented. This is an automated program that simulates a farm
