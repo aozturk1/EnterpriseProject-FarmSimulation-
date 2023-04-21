@@ -1,8 +1,20 @@
-import java.util.*;
-import java.lang.*;
+import java.io.IOException;
+import java.security.SecureRandom;
+import java.util.Random;
 
+/**
+ * the main class of the farming simulator.
+ * a simulation game where a random farm type is generated as well
+ *  as the rest of your days managing that farm all automatically.
+ */
 public class Main {
 
+    private static Random random1 = new SecureRandom();
+
+    /**
+     * the main method that runs the game loop.
+     * @param args command line arguments (not used)
+     */
     public static void main(String[] args) {
 
         Output.slowPrint("Starting a new game of Farm Management Simulator!");
@@ -14,23 +26,21 @@ public class Main {
         Farm farm = FarmFactory.createFarm(random);
 
         // add supplier to contacts
-        // add news to contacts
-        News news = new News("Local Whether 33");
-        Supplier supplier = new Supplier("Sarah");
-        farm.addObservers(news);
+        Supplier supplier = new Supplier("Rick");
         farm.addObservers(supplier);
 
         // simulate the farm for infinite cycles
         int i = 0;
         boolean crashNBurn = false;
         RandomEventType type = null;
-        while ( true ) {
+        while (true) {
             //DAY CYCLE STARTS
 
-            Output.slowPrint("Day " + (i+1) + " begins.");
+            Output.slowPrint("Day " + (i + 1) + " begins.");
 
             Output.slowPrint("Reading the newspaper...");
-            if (random < 0.5) {
+            random = Math.random();
+            if (random < 0.33) {
                 type = getRandomEventType();
                 crashNBurn = true;
             }
@@ -53,43 +63,41 @@ public class Main {
 
             if (crashNBurn) {
                 farm.generateRandomEvent(type);
+                crashNBurn = false;
             }
 
             //NIGHT CYCLE ENDS
 
-            Output.slowPrint("Day " + (i+1) + " ends.");
+            Output.slowPrint("Day " + (i + 1) + " ends.");
             Output.slowPrint(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
             i++;
+
+            //for testing purposes
+            if (args.length == 1) {
+                System.out.println("Successful Test");
+                break;
+            }
         }
-
-
     }
 
+    /**
+     * an enum representing the possible random events that can occur in the game.
+     */
     public enum RandomEventType {
         DISEASE_OUTBREAK,
         WEATHER_STORM,
         MARKET_CRASH,
         EQUIPMENT_EXPENSES,
-        ALIEN_ABDUCTION
     }
 
+    /**
+     * returns a random event type.
+     * @return a random event type
+     */
     public static RandomEventType getRandomEventType() {
-        Random random = new Random();
-        int eventIndex = random.nextInt(RandomEventType.values().length);
+        int eventIndex = random1.nextInt(RandomEventType.values().length);
         Output.slowPrint("There is a chance of " + RandomEventType.values()[eventIndex]);
         return RandomEventType.values()[eventIndex];
-    }
-
-    //testing test method
-    public static int factorial(int n) {
-        if (n < 0) {
-            throw new IllegalArgumentException("Argument must be non-negative");
-        }
-        int result = 1;
-        for (int i = 2; i <= n; i++) {
-            result *= i;
-        }
-        return result;
     }
 
 }

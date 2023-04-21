@@ -48,7 +48,7 @@ Base Code, please use the following commands:
     For Main, run "gradle run"
 ```   
 ```
-    For test, run "gradle test"
+    For SimulationTest, run "gradle SimulationTest"
 ```
 ```
     For jacoco, run "gradle jacocoTestReport"
@@ -62,5 +62,5 @@ Base Code, please use the following commands:
 -Gradle works correctly
 -Checkstyle and Spotbugs included
 -GitHub Action setup and passes
--JUNIT included and test runs and passes
+-JUNIT included and SimulationTest runs and passes
 -Readme has basic idea explained
