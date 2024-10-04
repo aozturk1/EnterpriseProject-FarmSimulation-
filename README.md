@@ -1,8 +1,5 @@
 Author: Alper Ozturk
 
-GitHub Repo Link:
-https://github.com/aozturk1/SER316Assignment5Farm
-
 Screencast Link:
 https://youtu.be/xODG3OxB_cQ
 
@@ -14,27 +11,19 @@ with text/command-line outputs.
 3 design patterns from the Gang of Four:
 
 a) Design Pattern: Factory
-Requirement:
-    "Farms can be of different types, such as an animal farm, a crop farm, a hybrid farm and so on.
-    You can choose to make something up too." 
+
 Implementation: 
     I used a factory generation to generate the specific types of farms such as Animal and Crop farms.
 
 b) Design Pattern: Observer
-Requirement: 
-    "The farmers on your farm are quite tech savvy, so when animals or crops die (or
-    harvested), an automatic message is sent to their supplier notifying them that they
-    need more stock."
+
 Implementation: 
     Made an Observer class that can be extended to different types of Observers. One observer type
     that I made was the supplier. The supplies would have a notify message that would be printed out
     if the farm went below a specific animal or crop number.
 
 c) Design Pattern: Singleton
-Requirement:
-    "Passive currency is earned with each new day (not night). This passive currency
-    income is generated from selling crops or animal products, or both depending on
-    your farm"
+
 Implementation:
     In order to manage the passive currency and all other money related things, I decided to use
     a singleton CurrencyManager class. This class will deal with losing and getting money and can
@@ -47,25 +36,6 @@ Please use the following commands:
 ```
     Run, "gradle run --console=plain"
 ```
-
-## Requirements that I think I fulfilled
--Git workflow
-
--All Design Patterns
-
--Checkstyle and Spotbugs included
-
--GitHub Action setup and passes
-
--JUNIT included and SimulationTest runs and passes
-
--Readme and PDF as asked
-
--Gradle works correctly
-
--Screencast
-
--And the following game requirements:
 
 • A new world must start with at least 1 farm.
 
